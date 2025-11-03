@@ -1,0 +1,21 @@
+product_id,name,generic_name,unit,category
+1,Product1,Generic1,tablet,Painkiller
+2,Product2,Generic2,bottle,Cough Syrup
+3,Product3,Generic3,tablet,Painkiller
+4,Product4,Generic4,bottle,Vitamin
+5,Product5,Generic5,bottle,Antibiotic
+6,Product6,Generic6,tablet,Painkiller
+7,Product7,Generic7,bottle,Cough Syrup
+8,Product8,Generic8,bottle,Vitamin
+9,Product9,Generic9,bottle,Painkiller
+10,Product10,Generic10,tablet,Antibiotic
+11,Product11,Generic11,tablet,Painkiller
+12,Product12,Generic12,strip,Cough Syrup
+13,Product13,Generic13,strip,Painkiller
+14,Product14,Generic14,bottle,Painkiller
+15,Product15,Generic15,bottle,Vitamin
+16,Product16,Generic16,tablet,Vitamin
+17,Product17,Generic17,strip,Antibiotic
+18,Product18,Generic18,bottle,Vitamin
+19,Product19,Generic19,tablet,Painkiller
+20,Product20,Generic20,tablet,Antibiotic
