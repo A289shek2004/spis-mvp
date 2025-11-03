@@ -1,0 +1,10 @@
+# Dev tools
+pytest
+flake8
+black
+isort
+
+# Django core deps
+django
+djangorestframework
+psycopg2-binary
