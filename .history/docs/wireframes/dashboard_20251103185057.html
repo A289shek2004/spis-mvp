@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPIS - Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+    h1 { text-align: center; }
+    .kpis { display: flex; justify-content: space-around; margin: 20px 0; }
+    .card { background: #fff; border: 2px dashed #aaa; padding: 20px; width: 30%; text-align: center; }
+    .chart { background: #fff; border: 2px dashed #aaa; height: 300px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    button { display: block; margin: 0 auto; padding: 10px 20px; border: 1px solid #ccc; background: #eee; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Dashboard</h1>
+
+  <div class="kpis">
+    <div class="card">Expiring in 30 days: <strong>12 items</strong></div>
+    <div class="card">Forecast Accuracy (MAPE): <strong>8.2%</strong></div>
+    <div class="card">Active Users This Week: <strong>3</strong></div>
+  </div>
+
+  <div class="chart">[ Forecast Chart Placeholder ]</div>
+
+  <button>Refresh Data</button>
+</body>
+</html>

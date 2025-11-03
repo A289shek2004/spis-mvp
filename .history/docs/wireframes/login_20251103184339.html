@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SPIS MVP — Wireframes Prototype</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" onclick="nav('dashboard')">SPIS MVP</div>
+    <nav class="nav">
+      <button onclick="nav('dashboard')">Dashboard</button>
+      <button onclick="nav('inventory')">Inventory</button>
+      <button onclick="nav('po')">PO Suggestions</button>
+      <button onclick="showLogout()">Logout</button>
+    </nav>
+  </header>
+
+  <main id="app">
+    <!-- LOGIN -->
+    <section id="login" class="screen">
+      <div class="card center-card">
+        <h2>Smart Pharma Inventory System</h2>
+        <div class="form-row">
+          <label>Username</label>
+          <input id="username" type="text" placeholder="your email or username" />
+        </div>
+        <div class="form-row">
+          <label>Password</label>
+          <input id="password" type="password" placeholder="password" />
+        </div>
+        <div class="form-row">
+          <button id="loginBtn" onclick="doLogin()">Login</button>
+        </div>
+        <p class="muted">Demo login: any username / any password</p>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="screen hidden">
+      <div class="page">
+        <h1>Dashboard</h1>
+        <div class="kpis">
+          <div class="kpi">
+            <div class="kpi-value" id="kpi-expiring">—</div>
+            <div class="kpi-label">Expiring in 30 days</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-value" id="kpi-mape">—</div>
+            <div class="kpi-label">Forecast MAPE (30d)</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-value" id="kpi-active">—</div>
+            <div class="kpi-label">Active users this week</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>30-day Forecast (placeholder)</h3>
+          <div class="chart-placeholder">[ Forecast chart will appear here ]</div>
+          <div class="muted">This is a wireframe placeholder for the forecast chart.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTORY LIST -->
+    <section id="inventory" class="screen hidden">
+      <div class="page">
+        <div class="page-head">
+          <h1>Inventory</h1>
+          <div>
+            <button onclick="showAddProduct()">+ Add Product</button>
+            <select id="filterCategory" onchange="renderInventory()">
+              <option value="">All categories</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card">
+          <table class="table" id="inventoryTable">
+            <thead>
+              <tr><th>Product</th><th>Category</th><th>Stock</th><th>Nearest Expiry</th><th>Actions</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div id="inventoryEmpty" class="empty hidden">No products found. Add your first inventory item.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCT DETAIL -->
+    <section id="productDetail" class="screen hidden">
+      <div class="page">
+        <div class="page-head">
+          <h1 id="pdTitle">Product: —</h1>
+          <div>
+            <button onclick="openFEFOModal()">FEFO Picklist</button>
+            <button onclick="showAddBatch()">+ Add Batch</button>
+            <button onclick="nav('inventory')">Back</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Batches</h3>
+          <table class="table" id="batchesTable">
+            <thead>
+              <tr><th>Batch No</th><th>Expiry</th><th>Qty</th><th>Price</th><th>Supplier</th><th>Actions</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div id="batchesEmpty" class="empty hidden">No batches found for this product.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PO SUGGESTION -->
+    <section id="po" class="screen hidden">
+      <div class="page">
+        <h1>Purchase Order Suggestions</h1>
+        <div class="card">
+          <table class="table" id="poTable">
+            <thead><tr><th>Product</th><th>Avg Daily Demand</th><th>Current Stock</th><th>Suggested Reorder Qty</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="muted">These suggestions are calculated from recent sales (placeholder logic).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODALS + small forms (hidden until used) -->
+    <div id="fefoModal" class="modal hidden">
+      <div class="modal-card">
+        <h3>FEFO Picklist</h3>
+        <div id="fefoContent"></div>
+        <div class="modal-actions">
+          <button onclick="confirmFEFO()">Confirm Picklist</button>
+          <button onclick="closeFEFOModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="logoutModal" class="modal hidden">
+      <div class="modal-card">
+        <h3>Logout</h3>
+        <p>Are you sure you want to logout?</p>
+        <div class="modal-actions">
+          <button onclick="doLogout()">Yes, logout</button>
+          <button onclick="hideLogout()">No</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">SPIS MVP — Wireframe prototype</footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
