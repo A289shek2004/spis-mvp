@@ -14,11 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class BatchSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     product_id = serializers.PrimaryKeyRelatedField(write_only=True, source='product', queryset=Product.objects.all())
-    def validate_quantity(self, value):
-        if value < 0:
-            raise serializers.ValidationError("Quantity cannot be negative.")
-        return value
-
+    
     class Meta:
         model = Batch
         fields = ['id','product','product_id','batch_no','expiry_date','quantity','purchase_price','supplier']
