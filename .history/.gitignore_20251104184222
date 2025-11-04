@@ -23,7 +23,6 @@ staticfiles/
 .vscode/
 .idea/
 .DS_Store
-
 # Node / React (future frontend)
 node_modules/
 build/

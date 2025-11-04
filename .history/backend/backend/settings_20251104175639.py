@@ -41,8 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'inventory',
-    'django_filters',
-    
 
 ]
 

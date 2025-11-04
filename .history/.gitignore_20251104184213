@@ -19,10 +19,8 @@ staticfiles/
 .env
 *.env
 
-# VSCode
-.vscode/
-.idea/
-.DS_Store
+# Docker
+*.log
 
 # Node / React (future frontend)
 node_modules/
