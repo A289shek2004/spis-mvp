@@ -1,0 +1,5 @@
+# Dev / CI dependencies
+flake8
+pytest
+pytest-django
+backend/requirements-dev.txt

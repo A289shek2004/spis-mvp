@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPIS - FEFO Picklist</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: rgba(0,0,0,0.1);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal {
+      background: #fff;
+      border: 2px dashed #aaa;
+      width: 500px;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    h2 { margin-top: 0; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+    th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+    th { background: #eee; }
+    .btns { text-align: right; }
+    button { padding: 8px 12px; margin-left: 10px; }
+    .info { font-size: 14px; color: #666; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="modal">
+    <h2>FEFO Picklist for Paracetamol</h2>
+    <div class="info">Batches sorted by soonest expiry first (FEFO rule).</div>
+    <table>
+      <tr><th>Batch No</th><th>Expiry</th><th>Qty</th></tr>
+      <tr><td>B1234</td><td>2025-02-10</td><td>15</td></tr>
+      <tr><td>B1250</td><td>2025-05-01</td><td>30</td></tr>
+    </table>
+    <div class="btns">
+      <button>Cancel</button>
+      <button>Confirm Picklist</button>
+    </div>
+  </div>
+</body>
+</html>

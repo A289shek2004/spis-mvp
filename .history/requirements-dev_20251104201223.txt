@@ -1,0 +1,14 @@
+# Dev / CI dependencies
+flake8
+pytest
+pytest-django
+# Dev tools
+pytest
+flake8
+black
+isort
+
+# Django core deps
+django
+djangorestframework
+psycopg2-binary
