@@ -55,3 +55,21 @@ class Sale(models.Model):
 
     def __str__(self):
         return f"Sale {self.id} - {self.qty_sold} x {self.batch}"
+
+class BatchPrediction(models.Model):
+    batch = models.OneToOneField(Batch, on_delete=models.CASCADE, related_name='prediction')
+    expiry_risk = models.FloatField(default=0.0)  # Range 0–1 (0 = safe, 1 = high risk)
+    computed_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.batch.batch_no} → risk {self.expiry_risk:.2f}"
+
+class RiskHistory(models.Model):
+    date = models.DateField(unique=True)
+    high_risk_count = models.IntegerField(default=0)
+    medium_risk_count = models.IntegerField(default=0)
+    low_risk_count = models.IntegerField(default=0)
+    total_predictions = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"RiskHistory {self.date}"

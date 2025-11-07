@@ -36,4 +36,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path("api/health/", health_check),
+    path('api/', include('inventory.urls')),
 ]
