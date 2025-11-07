@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,8 +46,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'inventory',
-
-    
 
 ]
 
@@ -82,12 +83,27 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+
+if os.environ.get("USE_SQLITE", "true") == "true":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "spis",
+            "USER": "spis",
+            "PASSWORD": "spispass",
+            "HOST": "db",
+            "PORT": "5432",
+        }
+    }
+
 
 
 # Password validation
@@ -139,3 +155,50 @@ REST_FRAMEWORK = {
 }
 AUTH_USER_MODEL = 'inventory.User'
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Celery Configuration
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
+
+
+# =====================
+# SENTRY CONFIG (Local)
+# =====================
+
+sentry_sdk.init(
+    dsn="https://examplePublicKey@o0.ingest.sentry.io/0",  # placeholder DSN
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,   # 0.0 disables tracing
+    send_default_pii=False,   # don't send personal data
+    environment="local-dev"
+)
+
+# =====================
+# LOGGING CONFIG
+# =====================
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "[{levelname}] {asctime} {name}: {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+}
