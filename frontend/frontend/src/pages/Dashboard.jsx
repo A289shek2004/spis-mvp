@@ -1,24 +1,19 @@
-/*
-Acceptance criteria:
-- User enters username & password
-- Clicks “Login” → navigates to /dashboard
-- Validation: both fields required
-*/
-
-import { useEffect, useState } from "react";
-import { checkBackendHealth } from "../utils/api";
-
 export default function Dashboard() {
-  const [health, setHealth] = useState("checking...");
-
-  useEffect(() => {
-    checkBackendHealth().then((res) => setHealth(res.status));
-  }, []);
+  const user = localStorage.getItem("token");
 
   return (
-    <div style={{ padding: "40px", fontFamily: "Arial" }}>
-      <h1>Dashboard</h1>
-      <p>Backend status: <strong>{health}</strong></p>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-green-50">
+      <h1 className="text-3xl font-bold mb-4 text-green-700">Welcome to SPIS Dashboard</h1>
+      <p className="text-gray-600">You are logged in ✅</p>
+      <button
+        onClick={() => {
+          localStorage.removeItem("token");
+          window.location.href = "/login";
+        }}
+        className="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+      >
+        Logout
+      </button>
     </div>
   );
 }

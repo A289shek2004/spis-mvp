@@ -1,46 +1,69 @@
-/*
-Acceptance criteria:
-- User enters username & password
-- Clicks “Login” → navigates to /dashboard
-- Validation: both fields required
-*/
-
 import { useState } from "react";
+import api from "../utils/api";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`Logging in with ${username}`);
-  };
+ const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError("");
+
+  try {
+    // Mock login success (for now)
+    await new Promise((r) => setTimeout(r, 500));
+    localStorage.setItem("token", "demo123");
+    navigate("/dashboard");
+  } catch (err) {
+    setError("Login failed. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
-    <div style={{ display: "flex", height: "100vh", alignItems: "center", justifyContent: "center", background: "#f5f5f5" }}>
-      <form
-        onSubmit={handleSubmit}
-        style={{ background: "#fff", padding: "30px", borderRadius: "8px", width: "300px", boxShadow: "0 0 10px rgba(0,0,0,0.1)" }}
-      >
-        <h2 style={{ textAlign: "center" }}>Login</h2>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          style={{ width: "100%", margin: "10px 0", padding: "10px" }}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ width: "100%", margin: "10px 0", padding: "10px" }}
-        />
-        <button type="submit" style={{ width: "100%", padding: "10px", background: "#ddd", border: "none" }}>
-          Login
-        </button>
-      </form>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+        <h1 className="text-2xl font-semibold mb-6 text-center text-gray-700">SPIS Login</h1>
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-200"
+              placeholder="user@example.com"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-1">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-200"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
