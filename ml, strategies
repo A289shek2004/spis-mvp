@@ -1,0 +1,1786 @@
+Implementing Linear Regression to predict housing prices based on features
+such as size, location etc.
+a) Import the “House Price Prediction” data and analyse it with the help
+of pre-defined functions.
+b) Carry out the required steps of data pre-processing and do necessary
+Visualizations.
+c) Split the data and train the data with the Linear Regression model.
+d) Make the predictions and evaluate it on the test data.
+
+Below is a complete step-by-step implementation in Python for:
+
+Linear Regression to predict housing prices based on features like size, location, etc.
+
+We will use Pandas, Matplotlib, Seaborn, and Scikit-Learn.
+
+1. Import Libraries
+import pandas as pd
+import numpy as np
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+2. Import Dataset and Analyse (Part a)
+
+Load the dataset.
+
+df = pd.read_csv("housing.csv")
+View first rows
+df.head()
+Dataset Information
+df.info()
+Statistical Summary
+df.describe()
+Check Missing Values
+df.isnull().sum()
+Column Names
+df.columns
+
+Example dataset columns may look like:
+
+price
+area
+bedrooms
+bathrooms
+stories
+parking
+location
+3. Data Preprocessing (Part b)
+3.1 Handle Missing Values
+df = df.dropna()
+
+OR
+
+df.fillna(df.mean(), inplace=True)
+3.2 Convert Categorical Data
+
+If dataset contains location column.
+
+df = pd.get_dummies(df, columns=['location'], drop_first=True)
+
+This converts text categories into numerical format.
+
+4. Data Visualization
+4.1 Correlation Heatmap
+plt.figure(figsize=(10,6))
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm")
+plt.title("Correlation Matrix")
+plt.show()
+4.2 Price vs Area
+sns.scatterplot(x='area', y='price', data=df)
+plt.title("Price vs Area")
+plt.show()
+4.3 Distribution of Prices
+sns.histplot(df['price'], kde=True)
+plt.title("Price Distribution")
+plt.show()
+5. Define Features and Target
+
+Target variable = Price
+
+X = df.drop('price', axis=1)
+y = df['price']
+6. Train Test Split (Part c)
+
+Split data into training and testing sets
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+80% → Training
+20% → Testing
+
+7. Train Linear Regression Model
+model = LinearRegression()
+
+model.fit(X_train, y_train)
+
+Check coefficients:
+
+print(model.coef_)
+
+Intercept:
+
+print(model.intercept_)
+8. Make Predictions (Part d)
+y_pred = model.predict(X_test)
+
+View predictions:
+
+results = pd.DataFrame({
+    "Actual": y_test,
+    "Predicted": y_pred
+})
+
+print(results.head())
+9. Evaluate Model
+Mean Squared Error
+mse = mean_squared_error(y_test, y_pred)
+print("MSE:", mse)
+Root Mean Squared Error
+rmse = np.sqrt(mse)
+print("RMSE:", rmse)
+R² Score
+r2 = r2_score(y_test, y_pred)
+print("R2 Score:", r2)
+
+Interpretation:
+
+Score	Meaning
+R² close to 1	Good model
+R² close to 0	Poor model
+10. Visualization of Predictions
+plt.scatter(y_test, y_pred)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title("Actual vs Predicted Prices")
+plt.show()
+Final Workflow Summary
+
+Import dataset
+
+Analyse dataset (head(), info(), describe())
+
+Handle missing values
+
+Convert categorical variables
+
+Visualize data
+
+Split dataset
+
+Train Linear Regression model
+
+Predict housing prices
+
+Evaluate model using MSE, RMSE, R²
+
+✅ This is exactly the structure professors expect in practical journals.
+
+If you want, I can also give you:
+
+• Ready-to-write practical journal format (Aim, Apparatus, Code, Output, Conclusion)
+• Sample housing dataset
+• Viva questions your professor may ask from this practical.
+
+ Implementing the K-means clustering algorithm to identify distinct clusters in
+a customer demographic dataset.
+a) Import the “Mall Customers” data and plot Visualizations.
+b) Carry out the required steps of data pre-processing.
+c) Install the model and fit it on the data according to the parameters.
+d) Show the final visualization of the clusters also find the number of
+clusters to be defined.
+
+Below is a complete Python implementation of K-Means Clustering on the “Mall Customers Dataset” with all required steps for your practical.
+
+Implementing K-Means Clustering on Mall Customers Dataset
+Aim
+
+To implement the K-Means clustering algorithm to identify different groups of customers based on their demographics and spending behavior.
+
+1. Import Required Libraries
+import pandas as pd
+import numpy as np
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+2. Import Dataset (Part a)
+df = pd.read_csv("Mall_Customers.csv")
+View Dataset
+df.head()
+
+Example Columns:
+
+| CustomerID | Gender | Age | Annual Income (k$) | Spending Score (1-100) |
+
+Dataset Information
+df.info()
+Statistical Summary
+df.describe()
+3. Data Visualization
+3.1 Age Distribution
+plt.figure(figsize=(6,4))
+sns.histplot(df['Age'], bins=20, kde=True)
+plt.title("Age Distribution")
+plt.show()
+3.2 Annual Income vs Spending Score
+plt.figure(figsize=(6,4))
+sns.scatterplot(x="Annual Income (k$)", y="Spending Score (1-100)", data=df)
+plt.title("Income vs Spending Score")
+plt.show()
+3.3 Gender Distribution
+sns.countplot(x="Gender", data=df)
+plt.title("Gender Distribution")
+plt.show()
+4. Data Preprocessing (Part b)
+4.1 Convert Categorical Data
+
+Convert Gender into numeric.
+
+df['Gender'] = df['Gender'].map({'Male':1, 'Female':0})
+4.2 Select Important Features
+
+For clustering we usually use:
+
+Annual Income
+
+Spending Score
+
+X = df[['Annual Income (k$)', 'Spending Score (1-100)']]
+4.3 Feature Scaling
+scaler = StandardScaler()
+
+X_scaled = scaler.fit_transform(X)
+5. Finding Optimal Number of Clusters (Part d)
+
+Use the Elbow Method.
+
+wcss = []
+
+for i in range(1,11):
+    
+    kmeans = KMeans(n_clusters=i, random_state=42)
+    kmeans.fit(X_scaled)
+    
+    wcss.append(kmeans.inertia_)
+Plot Elbow Graph
+plt.plot(range(1,11), wcss)
+plt.title("Elbow Method")
+plt.xlabel("Number of Clusters")
+plt.ylabel("WCSS")
+plt.show()
+
+Optimal clusters usually appear around 5.
+
+6. Train K-Means Model (Part c)
+kmeans = KMeans(n_clusters=5, random_state=42)
+
+y_kmeans = kmeans.fit_predict(X_scaled)
+
+Add cluster labels to dataset.
+
+df['Cluster'] = y_kmeans
+7. Final Visualization of Clusters (Part d)
+plt.figure(figsize=(8,6))
+
+plt.scatter(
+    X_scaled[y_kmeans == 0, 0],
+    X_scaled[y_kmeans == 0, 1],
+    s=100,
+    c='red',
+    label='Cluster 1'
+)
+
+plt.scatter(
+    X_scaled[y_kmeans == 1, 0],
+    X_scaled[y_kmeans == 1, 1],
+    s=100,
+    c='blue',
+    label='Cluster 2'
+)
+
+plt.scatter(
+    X_scaled[y_kmeans == 2, 0],
+    X_scaled[y_kmeans == 2, 1],
+    s=100,
+    c='green',
+    label='Cluster 3'
+)
+
+plt.scatter(
+    X_scaled[y_kmeans == 3, 0],
+    X_scaled[y_kmeans == 3, 1],
+    s=100,
+    c='cyan',
+    label='Cluster 4'
+)
+
+plt.scatter(
+    X_scaled[y_kmeans == 4, 0],
+    X_scaled[y_kmeans == 4, 1],
+    s=100,
+    c='magenta',
+    label='Cluster 5'
+)
+
+plt.scatter(
+    kmeans.cluster_centers_[:,0],
+    kmeans.cluster_centers_[:,1],
+    s=300,
+    c='yellow',
+    label='Centroids'
+)
+
+plt.title("Customer Clusters")
+plt.xlabel("Annual Income")
+plt.ylabel("Spending Score")
+plt.legend()
+
+plt.show()
+Final Output
+
+The algorithm divides customers into 5 clusters such as:
+
+Cluster	Customer Type
+Cluster 1	High income – High spending
+Cluster 2	Low income – Low spending
+Cluster 3	High income – Low spending
+Cluster 4	Low income – High spending
+Cluster 5	Average customers
+
+Businesses can use this to target marketing strategies.
+
+Conclusion
+
+The K-Means clustering algorithm successfully grouped mall customers into distinct clusters based on income and spending patterns, helping businesses identify different customer segments for better marketing decisions.
+
+✅ If you want, I can also give you:
+
+• Journal-ready version (under 300 words like your professor requires)
+• Mall Customers dataset
+• Viva questions for this practical
+• Better professional cluster visualization used in Data Science projects.
+
+Building a decision tree model using the ID3 algorithm to predict whether a
+customer will churn or not.
+a) Import the “Churn” data and analyse it with the help of pre-defined
+functions.
+b) Carry out the required steps of data pre-processing and do necessary
+Visualizations.
+c) Split the data and fit it with the Decision Tree model (use the model
+from “sklearn” library).
+d) Make the predictions and evaluate it on the test data
+
+Below is a complete Python implementation of a Decision Tree model (ID3 concept using entropy) to predict Customer Churn, following all the steps required in your question.
+
+Building a Decision Tree Model to Predict Customer Churn
+Aim
+
+To build a Decision Tree classifier using the ID3 algorithm (entropy criterion) to predict whether a customer will churn or not based on customer features.
+
+1. Import Required Libraries
+import pandas as pd
+import numpy as np
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+2. Import Dataset (Part a)
+df = pd.read_csv("churn.csv")
+View Dataset
+df.head()
+
+Example Columns:
+
+| CustomerID | Gender | Age | Tenure | MonthlyCharges | Contract | Churn |
+
+Dataset Information
+df.info()
+Statistical Summary
+df.describe()
+Check Missing Values
+df.isnull().sum()
+3. Data Preprocessing (Part b)
+3.1 Handle Missing Values
+df = df.dropna()
+3.2 Convert Categorical Variables
+
+Convert categorical features into numeric values.
+
+df = pd.get_dummies(df, drop_first=True)
+3.3 Define Features and Target
+
+Target column = Churn
+
+X = df.drop("Churn", axis=1)
+y = df["Churn"]
+4. Data Visualization
+Churn Distribution
+sns.countplot(x="Churn", data=df)
+plt.title("Customer Churn Distribution")
+plt.show()
+Correlation Heatmap
+plt.figure(figsize=(10,6))
+sns.heatmap(df.corr(), cmap="coolwarm")
+plt.title("Feature Correlation")
+plt.show()
+5. Split Dataset (Part c)
+
+Split data into training and testing sets.
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42
+)
+
+80% → Training
+20% → Testing
+
+6. Train Decision Tree Model (ID3 Concept)
+
+ID3 uses Entropy as the splitting criterion.
+
+model = DecisionTreeClassifier(
+    criterion="entropy",
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+7. Make Predictions (Part d)
+y_pred = model.predict(X_test)
+8. Evaluate the Model
+Accuracy
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Accuracy:", accuracy)
+Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+
+print(cm)
+Classification Report
+print(classification_report(y_test, y_pred))
+
+Output includes:
+
+Precision
+
+Recall
+
+F1 Score
+
+9. Visualize Decision Tree (Optional but Good for Practical)
+from sklearn.tree import plot_tree
+
+plt.figure(figsize=(15,10))
+
+plot_tree(
+    model,
+    filled=True,
+    feature_names=X.columns,
+    class_names=["No Churn", "Churn"]
+)
+
+plt.show()
+Final Workflow
+
+Import churn dataset
+
+Analyze dataset (head, info, describe)
+
+Preprocess data (handle missing values & encode categorical variables)
+
+Visualize churn distribution
+
+Split dataset into training and testing sets
+
+Train Decision Tree classifier using entropy (ID3 concept)
+
+Predict churn on test data
+
+Evaluate model using Accuracy, Confusion Matrix, Classification Report
+
+Conclusion
+
+The Decision Tree model using entropy (ID3) successfully predicts whether a customer will churn or stay based on their attributes. The model helps businesses identify customers at risk of leaving and take preventive actions.
+
+✅ Since you are doing DS/ML practicals, I can also give you:
+
+All 10–12 ML practicals with clean journal format
+
+Short journal answers (under 300 words)
+
+Viva questions professors usually ask from these algorithms
+
+Ready datasets used in practical exams.
+
+Using logistic regression predict whether a credit card transaction is
+fraudulent or not.
+a) Import the “Credit Card” data and remove the variables not required
+for the processing.
+b) Split the data into training and validation data.
+c) Train the data on Logistic Regression model and predict for the test
+data.
+d) Evaluate the predictions i.e. show the Confusion Matrix and Accuracy
+Score of the model.
+
+Below is a complete Python implementation of Logistic Regression to detect Credit Card Fraud, following all the required steps in your question.
+
+Credit Card Fraud Detection using Logistic Regression
+Aim
+
+To build a Logistic Regression model that predicts whether a credit card transaction is fraudulent or not.
+
+1. Import Required Libraries
+import pandas as pd
+import numpy as np
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+2. Import Dataset (Part a)
+df = pd.read_csv("creditcard.csv")
+View Dataset
+df.head()
+
+Typical Columns:
+
+| Time | V1 | V2 | V3 | ... | V28 | Amount | Class |
+
+Where:
+
+Class = 0 → Normal transaction
+
+Class = 1 → Fraud transaction
+
+Dataset Information
+df.info()
+Statistical Summary
+df.describe()
+3. Remove Unnecessary Variables
+
+For example Time column may not be useful.
+
+df = df.drop(['Time'], axis=1)
+4. Check Class Distribution
+df['Class'].value_counts()
+
+Visualization:
+
+sns.countplot(x='Class', data=df)
+plt.title("Fraud vs Non-Fraud Transactions")
+plt.show()
+5. Define Features and Target
+X = df.drop('Class', axis=1)
+
+y = df['Class']
+6. Split Dataset (Part b)
+
+Split into training and validation data.
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42
+)
+
+80% → Training
+20% → Testing
+
+7. Train Logistic Regression Model (Part c)
+model = LogisticRegression(max_iter=1000)
+
+model.fit(X_train, y_train)
+8. Predict on Test Data
+y_pred = model.predict(X_test)
+9. Evaluate the Model (Part d)
+Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+
+print("Confusion Matrix:\n", cm)
+
+Example output:
+
+	Predicted 0	Predicted 1
+Actual 0	True Negative	False Positive
+Actual 1	False Negative	True Positive
+Accuracy Score
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Accuracy:", accuracy)
+Classification Report (Optional)
+print(classification_report(y_test, y_pred))
+
+It shows:
+
+Precision
+
+Recall
+
+F1 Score
+
+10. Confusion Matrix Visualization (Optional)
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("Confusion Matrix")
+
+plt.show()
+Final Workflow
+
+Import credit card dataset
+
+Remove unnecessary columns
+
+Analyze data and visualize fraud distribution
+
+Define features (X) and target (y)
+
+Split dataset into training and testing
+
+Train Logistic Regression model
+
+Predict fraudulent transactions
+
+Evaluate model using Confusion Matrix and Accuracy Score
+
+Conclusion
+
+The Logistic Regression model successfully predicts whether a credit card transaction is fraudulent or legitimate. The model evaluation using confusion matrix and accuracy score helps measure its performance.
+
+✅ Since you are doing ML practicals, I can also give you:
+
+All ML practicals codes (Linear Regression, K-Means, Decision Tree, Logistic Regression, Naive Bayes, SVM, Random Forest, etc.)
+
+Ready journal format for practical submission
+
+Common viva questions professors ask from these algorithms.
+
+
+Applying hierarchical clustering to group customer segments based on their 
+purchasing behavior.
+a) Import the “Mall Customers” data and plot Visualizations.
+b) Carry out the required steps of data pre-processing.
+c) Install the model and fit it on the data according to the parameters.
+d) Show the final visualization of the dendogram by defining the function
+for the same.
+
+Below is a complete Python implementation of Hierarchical Clustering on the “Mall Customers Dataset”, covering all steps asked in your practical.
+
+Applying Hierarchical Clustering to Group Customer Segments
+Aim
+
+To apply Hierarchical Clustering to group customers based on their purchasing behavior using the Mall Customers dataset.
+
+1. Import Required Libraries
+import pandas as pd
+import numpy as np
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import AgglomerativeClustering
+
+from scipy.cluster.hierarchy import dendrogram, linkage
+2. Import Dataset (Part a)
+df = pd.read_csv("Mall_Customers.csv")
+View Dataset
+df.head()
+
+Typical Columns:
+
+| CustomerID | Gender | Age | Annual Income (k$) | Spending Score (1-100) |
+
+Dataset Information
+df.info()
+Statistical Summary
+df.describe()
+3. Data Visualization
+Annual Income vs Spending Score
+plt.figure(figsize=(6,4))
+
+sns.scatterplot(
+    x='Annual Income (k$)',
+    y='Spending Score (1-100)',
+    data=df
+)
+
+plt.title("Customer Purchasing Behaviour")
+plt.show()
+Age Distribution
+sns.histplot(df['Age'], bins=20)
+
+plt.title("Age Distribution")
+plt.show()
+4. Data Preprocessing (Part b)
+Convert Categorical Data
+
+Convert Gender to numeric.
+
+df['Gender'] = df['Gender'].map({'Male':1, 'Female':0})
+Select Important Features
+
+For clustering we usually use:
+
+Annual Income
+
+Spending Score
+
+X = df[['Annual Income (k$)', 'Spending Score (1-100)']]
+Feature Scaling
+scaler = StandardScaler()
+
+X_scaled = scaler.fit_transform(X)
+5. Plot Dendrogram (Part d)
+
+Dendrogram helps to identify the optimal number of clusters.
+
+plt.figure(figsize=(10,6))
+
+linked = linkage(X_scaled, method='ward')
+
+dendrogram(linked)
+
+plt.title("Dendrogram")
+plt.xlabel("Customers")
+plt.ylabel("Euclidean Distance")
+
+plt.show()
+
+From the dendrogram, we usually observe around 5 clusters.
+
+6. Train Hierarchical Clustering Model (Part c)
+model = AgglomerativeClustering(
+    n_clusters=5,
+    metric='euclidean',
+    linkage='ward'
+)
+
+clusters = model.fit_predict(X_scaled)
+
+Add cluster labels to dataset.
+
+df['Cluster'] = clusters
+7. Final Cluster Visualization
+plt.figure(figsize=(8,6))
+
+plt.scatter(
+    X_scaled[clusters == 0, 0],
+    X_scaled[clusters == 0, 1],
+    s=100,
+    c='red',
+    label='Cluster 1'
+)
+
+plt.scatter(
+    X_scaled[clusters == 1, 0],
+    X_scaled[clusters == 1, 1],
+    s=100,
+    c='blue',
+    label='Cluster 2'
+)
+
+plt.scatter(
+    X_scaled[clusters == 2, 0],
+    X_scaled[clusters == 2, 1],
+    s=100,
+    c='green',
+    label='Cluster 3'
+)
+
+plt.scatter(
+    X_scaled[clusters == 3, 0],
+    X_scaled[clusters == 3, 1],
+    s=100,
+    c='cyan',
+    label='Cluster 4'
+)
+
+plt.scatter(
+    X_scaled[clusters == 4, 0],
+    X_scaled[clusters == 4, 1],
+    s=100,
+    c='magenta',
+    label='Cluster 5'
+)
+
+plt.title("Customer Segments using Hierarchical Clustering")
+
+plt.xlabel("Annual Income")
+plt.ylabel("Spending Score")
+
+plt.legend()
+
+plt.show()
+Final Workflow
+
+Import Mall Customers dataset
+
+Analyze dataset using head(), info(), describe()
+
+Visualize purchasing behavior
+
+Preprocess data (convert gender & scale features)
+
+Plot Dendrogram to find optimal clusters
+
+Apply Agglomerative Hierarchical Clustering
+
+Visualize customer clusters
+
+Conclusion
+
+Hierarchical clustering successfully groups mall customers based on income and spending patterns. The dendrogram helps determine the optimal number of clusters, which can be used by businesses to identify different customer segments and target marketing strategies.
+
+✅ Since you are doing many ML practicals, if you want I can also give you:
+
+All 10 ML practicals in one clean notebook
+
+Under 250–300 words journal format (as professors require)
+
+Important viva questions for each algorithm
+
+Better visualizations like real Data Science projects.
+
+Developing a Support Vector Machine (SVM) model to classify email
+messages as spam or not spam.
+a) Import the “Spam Classification” data and also install the necessary
+libraries related to NLP.
+b) Define the necessary pre-processing functions and delete the
+duplicates if any.
+c) Split the data into training and testing, also extract important features.
+d) Train the data on SVM algorithm and find out the Accuracy Score and
+Confusion Matrix by making predictions on the test data
+
+Below is a complete Python implementation of Spam Email Classification using Support Vector Machine (SVM) with NLP preprocessing, covering all the required steps.
+
+Spam Email Classification using Support Vector Machine (SVM)
+Aim
+
+To develop a Support Vector Machine (SVM) model to classify email messages as Spam or Not Spam using Natural Language Processing (NLP) techniques.
+
+1. Import Required Libraries (Part a)
+import pandas as pd
+import numpy as np
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# NLP Libraries
+import nltk
+import string
+
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+Download required NLP resources:
+
+nltk.download('stopwords')
+2. Import Dataset
+df = pd.read_csv("spam.csv", encoding="latin-1")
+View Dataset
+df.head()
+
+Typical Columns:
+
+v1	v2
+label	message
+
+Rename columns:
+
+df = df[['v1','v2']]
+
+df.columns = ['label','message']
+3. Remove Duplicate Data (Part b)
+df = df.drop_duplicates()
+
+Check dataset shape:
+
+df.shape
+4. Data Visualization
+Spam vs Ham Distribution
+sns.countplot(x='label', data=df)
+
+plt.title("Spam vs Ham Messages")
+
+plt.show()
+5. Text Preprocessing Function (NLP)
+
+Define function for cleaning text.
+
+stemmer = PorterStemmer()
+
+def preprocess_text(text):
+    
+    text = text.lower()
+    
+    text = ''.join([char for char in text if char not in string.punctuation])
+    
+    words = text.split()
+    
+    words = [word for word in words if word not in stopwords.words('english')]
+    
+    words = [stemmer.stem(word) for word in words]
+    
+    return " ".join(words)
+
+Apply preprocessing:
+
+df['clean_text'] = df['message'].apply(preprocess_text)
+6. Convert Text to Features (Part c)
+
+Use TF-IDF Vectorization.
+
+vectorizer = TfidfVectorizer()
+
+X = vectorizer.fit_transform(df['clean_text'])
+
+Target variable:
+
+y = df['label']
+
+Convert labels to numeric:
+
+y = y.map({'ham':0, 'spam':1})
+7. Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42
+)
+
+80% → Training
+20% → Testing
+
+8. Train SVM Model (Part d)
+model = SVC(kernel='linear')
+
+model.fit(X_train, y_train)
+9. Make Predictions
+y_pred = model.predict(X_test)
+10. Evaluate Model
+Accuracy Score
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Accuracy:", accuracy)
+Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+
+print("Confusion Matrix:\n", cm)
+Confusion Matrix Visualization
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+
+plt.title("Confusion Matrix")
+
+plt.show()
+Classification Report (Optional)
+print(classification_report(y_test, y_pred))
+Final Workflow
+
+Import spam dataset
+
+Install NLP libraries (NLTK)
+
+Remove duplicate messages
+
+Preprocess text (lowercase, remove punctuation, stopwords, stemming)
+
+Convert text into numerical features using TF-IDF
+
+Split dataset into training and testing sets
+
+Train Support Vector Machine (SVM) model
+
+Predict spam messages
+
+Evaluate model using Accuracy Score and Confusion Matrix
+
+Conclusion
+
+The Support Vector Machine model combined with NLP preprocessing effectively classifies emails as Spam or Not Spam. Feature extraction using TF-IDF helps convert text data into numerical form suitable for machine learning.
+
+✅ Since you are doing many ML practicals, if you want I can also give you:
+
+All 8–10 ML practical codes in one clean notebook
+
+Journal-ready format (Aim, Code, Output, Conclusion)
+
+Important viva questions professors ask from SVM, NLP, Logistic Regression, Clustering, etc.
+
+Building a Naïve Bayes classifier to classify movie reviews as positive or
+negative sentiment.
+a) Import the “IMDB Reviews” data and also install the necessary
+libraries related to NLP.
+b) Define the necessary pre-processing functions and split the data into
+Training and Testing set.
+c) Train the data on Naïve Bayes algorithm (MultinomialNB) and predict
+it on the test data.
+d) Find out the Accuracy Score and Confusion Matrix and carry out
+Hyper-Parameter tuning with GridSearchCV to maximize the model
+performance
+
+Below is a complete Python implementation of Sentiment Analysis on IMDB Reviews using Naïve Bayes, including NLP preprocessing and Hyperparameter Tuning with GridSearchCV.
+
+Sentiment Analysis using Naïve Bayes (IMDB Reviews)
+Aim
+
+To build a Naïve Bayes classifier (MultinomialNB) to classify movie reviews as positive or negative sentiment using Natural Language Processing (NLP) techniques.
+
+1. Import Required Libraries (Part a)
+import pandas as pd
+import numpy as np
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# NLP Libraries
+import nltk
+import string
+
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+
+# Machine Learning
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+Download required NLTK resources:
+
+nltk.download('stopwords')
+2. Import Dataset
+df = pd.read_csv("IMDB_Dataset.csv")
+View Dataset
+df.head()
+
+Typical Columns:
+
+review	sentiment
+Movie review text	positive / negative
+Dataset Information
+df.info()
+Check Class Distribution
+df['sentiment'].value_counts()
+
+Visualization:
+
+sns.countplot(x='sentiment', data=df)
+
+plt.title("Sentiment Distribution")
+
+plt.show()
+3. Text Preprocessing Function (Part b)
+
+Define preprocessing function.
+
+stemmer = PorterStemmer()
+
+def preprocess_text(text):
+    
+    text = text.lower()
+    
+    text = ''.join([char for char in text if char not in string.punctuation])
+    
+    words = text.split()
+    
+    words = [word for word in words if word not in stopwords.words('english')]
+    
+    words = [stemmer.stem(word) for word in words]
+    
+    return " ".join(words)
+
+Apply preprocessing:
+
+df['clean_review'] = df['review'].apply(preprocess_text)
+4. Convert Text into Features
+
+Use TF-IDF Vectorization.
+
+vectorizer = TfidfVectorizer()
+
+X = vectorizer.fit_transform(df['clean_review'])
+
+Target variable:
+
+y = df['sentiment']
+
+Convert labels into numeric:
+
+y = y.map({'negative':0, 'positive':1})
+5. Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42
+)
+
+80% → Training
+20% → Testing
+
+6. Train Naïve Bayes Model (Part c)
+model = MultinomialNB()
+
+model.fit(X_train, y_train)
+7. Make Predictions
+y_pred = model.predict(X_test)
+8. Evaluate Model (Part d)
+Accuracy Score
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Accuracy:", accuracy)
+Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+
+print("Confusion Matrix:\n", cm)
+Confusion Matrix Visualization
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+
+plt.title("Confusion Matrix")
+
+plt.show()
+Classification Report (Optional)
+print(classification_report(y_test, y_pred))
+9. Hyperparameter Tuning using GridSearchCV
+
+Define parameter grid.
+
+param_grid = {
+    'alpha':[0.01,0.1,0.5,1,2]
+}
+
+Apply GridSearchCV.
+
+grid = GridSearchCV(
+    MultinomialNB(),
+    param_grid,
+    cv=5,
+    scoring='accuracy'
+)
+
+grid.fit(X_train, y_train)
+
+Best parameters:
+
+print("Best Parameters:", grid.best_params_)
+10. Train Model with Best Parameters
+best_model = grid.best_estimator_
+
+y_pred = best_model.predict(X_test)
+
+Evaluate again:
+
+print("Accuracy after tuning:", accuracy_score(y_test, y_pred))
+Final Workflow
+
+Import IMDB dataset
+
+Install NLP libraries (NLTK)
+
+Preprocess text (lowercase, remove punctuation, stopwords, stemming)
+
+Convert text into numerical features using TF-IDF
+
+Split dataset into training and testing sets
+
+Train Naïve Bayes classifier (MultinomialNB)
+
+Predict sentiments on test data
+
+Evaluate using Accuracy Score and Confusion Matrix
+
+Improve model using GridSearchCV hyperparameter tuning
+
+Conclusion
+
+The Naïve Bayes classifier effectively performs sentiment analysis on movie reviews. Using TF-IDF feature extraction and GridSearchCV hyperparameter tuning, the model performance can be improved to achieve higher accuracy in predicting positive and negative sentiments.
+
+
+
+------------------------------------------------------------------------------------------------------
+1️⃣ Difficulty level of each practical
+2️⃣ Which practicals have similar workflow
+3️⃣ Common template you can reuse for almost all practicals
+4️⃣ Which ones you should revise first
+
+I’ll structure this like an exam survival guide.
+
+1️⃣ Difficulty Level Classification (Very Important)
+🟢 Easy Practicals (Very High chance in exam)
+
+These follow almost same ML workflow.
+
+Practical	Algorithm	Difficulty
+5	Linear Regression	⭐ Very Easy
+6	Logistic Regression	⭐ Very Easy
+7	Model Evaluation (Accuracy, Precision, Recall, F1)	⭐ Very Easy
+9	K-Means Clustering	⭐ Easy
+
+Reason:
+Mostly 3–6 lines of sklearn code.
+
+🟡 Medium Practicals
+Practical	Algorithm	Difficulty
+1	KNN	⭐⭐ Medium
+2	Decision Tree (ID3)	⭐⭐ Medium
+8	Hierarchical Clustering	⭐⭐ Medium
+10	PCA	⭐⭐ Medium
+
+Reason:
+Some extra parameters or visualizations.
+
+🔴 Hard Practicals
+Practical	Algorithm	Difficulty
+3	SVM (Spam classification)	⭐⭐⭐ Hard
+4	Naive Bayes (NLP sentiment)	⭐⭐⭐ Hard
+
+Reason:
+
+Requires
+
+NLP preprocessing
+
+TFIDF
+
+Text cleaning
+
+But still manageable if code template remembered.
+
+2️⃣ Most Important Practicals to Revise First
+
+If you have 3–4 hours preparation, revise in this order:
+
+Priority 1
+
+Linear Regression
+
+Logistic Regression
+
+KNN
+
+Decision Tree
+
+These cover 50% of syllabus logic.
+
+Priority 2
+
+K-Means
+
+Hierarchical Clustering
+
+PCA
+
+Priority 3
+
+SVM
+
+Naive Bayes (NLP)
+
+3️⃣ Practicals with Similar Workflow
+
+This is very important for exam.
+
+Group 1 — Classification Models
+
+Same structure for:
+
+KNN
+
+Decision Tree
+
+Logistic Regression
+
+SVM
+
+Naive Bayes
+
+Workflow
+1 Import libraries
+
+2 Load dataset
+df = pd.read_csv()
+
+3 Data preprocessing
+drop columns
+handle categorical variables
+
+4 Define features and target
+
+X = df.drop('target',axis=1)
+y = df['target']
+
+5 Train test split
+
+train_test_split()
+
+6 Train model
+
+model.fit()
+
+7 Predict
+
+y_pred = model.predict()
+
+8 Evaluate
+
+accuracy_score
+confusion_matrix
+
+If you memorize this structure, you can perform 5 practicals easily.
+
+Group 2 — Regression
+
+Only:
+
+Linear Regression
+
+Workflow:
+
+Import dataset
+EDA
+Split data
+Train LinearRegression()
+Predict
+Evaluate (MSE, R2)
+
+Very simple.
+
+Group 3 — Clustering
+
+K-Means
+
+Hierarchical Clustering
+
+Workflow:
+
+Load dataset
+
+Select features
+
+Scale data
+
+Apply clustering
+
+Visualize clusters
+Group 4 — Dimensionality Reduction
+
+PCA
+
+Workflow:
+
+Load dataset
+
+Standardize data
+
+Apply PCA
+
+Reduce dimensions
+
+Visualize components
+4️⃣ Universal ML Template (Memorize This)
+
+You can solve 70% practicals using this template.
+
+import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Load dataset
+df = pd.read_csv("data.csv")
+
+# Features and target
+X = df.drop("target",axis=1)
+y = df["target"]
+
+# Split
+X_train,X_test,y_train,y_test = train_test_split(
+X,y,test_size=0.2,random_state=42)
+
+# Model
+from sklearn.algorithm import Model
+
+model = Model()
+
+model.fit(X_train,y_train)
+
+# Prediction
+y_pred = model.predict(X_test)
+
+# Evaluation
+print(accuracy_score(y_test,y_pred))
+print(confusion_matrix(y_test,y_pred))
+
+Just change
+
+Model
+
+Example:
+
+KNeighborsClassifier
+DecisionTreeClassifier
+LogisticRegression
+SVC
+MultinomialNB
+5️⃣ Expected Slip Combinations
+
+Teacher usually mixes easy + medium.
+
+Example slips:
+
+1️⃣ KNN + Logistic Regression
+2️⃣ Decision Tree + K-Means
+3️⃣ Linear Regression + PCA
+4️⃣ SVM + Evaluation metrics
+5️⃣ Naive Bayes + Hierarchical clustering
+
+Worst case:
+
+SVM + Naive Bayes
+
+But probability is low.
+
+6️⃣ Most Important Python Imports
+
+Remember these.
+
+import pandas as pd
+import numpy as np
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+7️⃣ Algorithm Import Cheat Sheet
+
+KNN
+
+from sklearn.neighbors import KNeighborsClassifier
+
+Decision Tree
+
+from sklearn.tree import DecisionTreeClassifier
+
+Logistic Regression
+
+from sklearn.linear_model import LogisticRegression
+
+Linear Regression
+
+from sklearn.linear_model import LinearRegression
+
+SVM
+
+from sklearn.svm import SVC
+
+Naive Bayes
+
+from sklearn.naive_bayes import MultinomialNB
+
+K-Means
+
+from sklearn.cluster import KMeans
+
+Hierarchical
+
+from sklearn.cluster import AgglomerativeClustering
+
+PCA
+
+from sklearn.decomposition import PCA
+8️⃣ 5 Most Common Viva Questions
+
+Very likely tomorrow.
+
+Q1 What is supervised learning?
+
+Learning with labeled data.
+
+Example:
+
+Regression
+Classification
+Q2 Difference between classification and regression?
+
+Classification → categorical output
+Regression → continuous output
+
+Example:
+
+Spam / Not spam → classification
+House price → regression
+Q3 What is overfitting?
+
+Model performs well on training data but poorly on test data.
+
+Q4 What is confusion matrix?
+
+Table showing
+
+TP
+TN
+FP
+FN
+Q5 What is PCA?
+
+Technique used for dimensionality reduction.
+
+9️⃣ Final Exam Strategy (Very Important)
+
+When slip comes:
+
+Step 1
+
+Write Aim
+
+Step 2
+
+Import libraries
+
+Step 3
+
+Load dataset
+
+Step 4
+
+Preprocess data
+
+Step 5
+
+Train model
+
+Step 6
+
+Predict
+
+Step 7
+
+Evaluate
+
+---------------------------
+📘 ML Practical Exam Cheat Sheet (All 10 Practicals)
+1️⃣ Universal ML Workflow (Use in most practicals)
+
+Almost 70% practicals follow this structure.
+
+import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+df = pd.read_csv("data.csv")
+
+X = df.drop("target",axis=1)
+y = df["target"]
+
+X_train,X_test,y_train,y_test = train_test_split(
+X,y,test_size=0.2,random_state=42)
+
+model.fit(X_train,y_train)
+
+y_pred = model.predict(X_test)
+
+print(accuracy_score(y_test,y_pred))
+print(confusion_matrix(y_test,y_pred))
+
+Just change the model.
+
+2️⃣ Algorithm Import Cheat Sheet
+KNN
+from sklearn.neighbors import KNeighborsClassifier
+model = KNeighborsClassifier(n_neighbors=5)
+Decision Tree
+from sklearn.tree import DecisionTreeClassifier
+model = DecisionTreeClassifier(criterion="entropy")
+
+(ID3 uses entropy)
+
+Logistic Regression
+from sklearn.linear_model import LogisticRegression
+model = LogisticRegression()
+Linear Regression
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+
+Evaluation:
+
+from sklearn.metrics import mean_squared_error,r2_score
+SVM
+from sklearn.svm import SVC
+model = SVC(kernel='linear')
+Naive Bayes
+from sklearn.naive_bayes import MultinomialNB
+model = MultinomialNB()
+
+Used for text classification.
+
+3️⃣ Clustering Algorithms
+
+These do NOT use train_test_split.
+
+K-Means
+from sklearn.cluster import KMeans
+
+model = KMeans(n_clusters=5)
+
+clusters = model.fit_predict(X)
+
+Elbow Method:
+
+wcss=[]
+
+for i in range(1,10):
+    kmeans=KMeans(n_clusters=i)
+    kmeans.fit(X)
+    wcss.append(kmeans.inertia_)
+Hierarchical Clustering
+from sklearn.cluster import AgglomerativeClustering
+
+model = AgglomerativeClustering(n_clusters=5)
+
+clusters = model.fit_predict(X)
+
+Dendrogram:
+
+from scipy.cluster.hierarchy import dendrogram,linkage
+
+linked = linkage(X,'ward')
+
+dendrogram(linked)
+4️⃣ PCA (Dimensionality Reduction)
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+pca = PCA(n_components=2)
+
+X_pca = pca.fit_transform(X_scaled)
+5️⃣ Model Evaluation Metrics
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
+
+Example:
+
+print("Accuracy:",accuracy_score(y_test,y_pred))
+print("Precision:",precision_score(y_test,y_pred))
+print("Recall:",recall_score(y_test,y_pred))
+print("F1:",f1_score(y_test,y_pred))
+6️⃣ NLP Feature Extraction (Used in SVM / Naive Bayes)
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+vectorizer = TfidfVectorizer()
+
+X = vectorizer.fit_transform(text_data)
+7️⃣ Common Visualizations
+Scatter Plot
+plt.scatter(X[:,0],X[:,1])
+Countplot
+sns.countplot(x="target",data=df)
+Heatmap
+sns.heatmap(confusion_matrix(y_test,y_pred),annot=True)
+8️⃣ Most Important Functions
+
+Remember these:
+
+Function	Purpose
+fit()	Train model
+predict()	Make predictions
+train_test_split()	Split dataset
+accuracy_score()	Evaluate model
+confusion_matrix()	Error analysis
+9️⃣ Easy Viva Answers
+What is Machine Learning?
+
+Machine learning is a technique where computers learn patterns from data and make predictions without explicit programming.
+
+What is Classification?
+
+Predicting categorical values.
+
+Example:
+
+Spam / Not spam
+
+What is Regression?
+
+Predicting continuous values.
+
+Example:
+
+House price prediction
+
+What is Overfitting?
+
+When a model performs well on training data but poorly on new data.
+
+What is PCA?
+
+Technique used to reduce the number of features while preserving important information.
+
+🔟 Quick Memory Trick (Very Useful)
+
+Remember this pattern:
+
+Load Data
+↓
+Preprocess
+↓
+Split Data
+↓
+Train Model
+↓
+Predict
+↓
+Evaluate
+
+Works for 80% practicals.
+
+⚡ Final Advice for Tomorrow
+
+When you get the slip:
+
+Step 1
+
+Write Aim
+
+Step 2
+
+Import libraries
+
+Step 3
+
+Load dataset
+
+Step 4
+
+Preprocess
+
+Step 5
+
+Train model
+
+Step 6
+
+Predict
+
+Step 7
+
+Evaluate
+
+That's full marks structure.
+
+
